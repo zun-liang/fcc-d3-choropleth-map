@@ -21,8 +21,6 @@ This is a solution to the [Visualize Data with a Choropleth Map](https://www.fre
 Users should be able to:
 
 - View the optimal layout for the site depending on their device's screen size
-- Display the land-surface temperature changes from 1753 to 2015
-- Interact with the heat map graph to learn about further information in each heat cell
 
 ### Screenshot
 
@@ -51,11 +49,19 @@ Users should be able to:
 
 ### What I learned
 
-
+- How to draw a US map using d3.js and topojson-client
+- []()
+- []()
+- []()
+- []()
 
 ### Helpful Resources
 
-
+- [How to draw a US map](https://observablehq.com/@jeantimex/how-to-draw-a-us-map)
+- [topojson-client](https://github.com/topojson/topojson-client?tab=readme-ov-file)
+- []()
+- []()
+- []()
 
 ## Author
 
