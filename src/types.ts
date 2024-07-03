@@ -1,8 +1,16 @@
 import { Topology, GeometryCollection } from "topojson-specification";
 
+export interface Margin {
+  top: number;
+  right: number;
+  left: number;
+  bottom: number;
+}
+
 export interface UsTopology extends Topology {
   objects: {
     states: GeometryCollection;
+    counties: GeometryCollection;
   };
 }
 
@@ -11,10 +19,4 @@ export interface EducationData {
   state: string;
   area_name: string;
   bachelorOrHigher: number;
-}
-
-export interface CountyData  extends Topology {
-  objects: {
-    counties: GeometryCollection;
-  };
 }
