@@ -19,9 +19,9 @@ body {
 
 svg {
   position: absolute;
-  top: 100%;
+  top: 80%;
   left: 50%;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, -80%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,4 +36,27 @@ svg {
 
 #description {
   font-size: 20px;
+}
+
+#source {
+  font-size: 18px;
+}
+
+#link {
+  color: blue;
+}
+
+#link:hover {
+  color: black;
+}
+
+.state {
+  fill: none;
+  stroke: white;
+  stroke-width: 1px;
+}
+
+.county {
+  stroke: white;
+  stroke-width: 0.5px;
 }
