@@ -50,7 +50,7 @@ Users should be able to:
 ### What I learned
 
 - How to draw a US map using d3.js and topojson-client
-- []()
+- How to add link in d3.js
 - []()
 - []()
 - []()
