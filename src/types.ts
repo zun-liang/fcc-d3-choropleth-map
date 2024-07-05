@@ -18,5 +18,5 @@ export interface EducationData {
   fips: number;
   state: string;
   area_name: string;
-  bachelorOrHigher: number;
+  bachelorsOrHigher: number;
 }
