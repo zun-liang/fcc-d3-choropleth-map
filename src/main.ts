@@ -7,6 +7,12 @@ const width: number = 960;
 const height: number = 600;
 const margin: Margin = { top: 80, left: 70, right: 70, bottom: 80 };
 
+const getCountyData = (education: EducationData[], id: string) => education.find(
+  (e) => e.fips.toString().padStart(5, "0") === id
+);
+
+const getId = (d: any) => (d.id ?? "").toString();
+
 Promise.all([
   d3.json<EducationData[]>(
     "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json"
@@ -34,10 +40,14 @@ Promise.all([
     const svg = d3
       .select("div#app")
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .classed("svg-content", true);
 
     const path = d3.geoPath();
+
+    const tooltip = d3.select("body").append("div").attr("id", "tooltip");
 
     svg
       .append("g")
@@ -47,16 +57,30 @@ Promise.all([
       .append("path")
       .attr("d", path)
       .attr("class", "county")
-      .attr("data-fips", "")
-      // update
-      .attr("data-education", "")
-      // update
+      .attr("data-fips", (d) => {
+        const county = getCountyData(education, getId(d));
+        return county ? county.fips.toString() : "";
+      })
+      .attr("data-education", (d) => {
+        const county = getCountyData(education, getId(d));
+        return county ? county.bachelorsOrHigher.toString() : "";
+      })
       .attr("fill", (d) => {
-        const county = education.find(
-          (e) => e.fips.toString().padStart(5, "0") === d.id
-        );
-        return county ? colorScale(county.bachelorsOrHigher) : "green";
-      });
+        const county = getCountyData(education, getId(d));
+        return county ? colorScale(county.bachelorsOrHigher) : "black";
+      })
+      .on("mouseover", (event, d) => {
+        const county = getCountyData(education, getId(d));
+        tooltip
+          .style("display", "block")
+          .html(
+            `${county?.area_name}, ${county?.state}: ${county?.bachelorsOrHigher}%`
+          )
+          .attr("data-education", county?.bachelorsOrHigher.toString() ?? "å")
+          .style("left", `${event.pageX - 50}px`)
+          .style("top", `${event.pageY + 30}px`);
+      })
+      .on("mouseout", () => tooltip.style("display", "none"));
 
     svg
       .append("g")
@@ -97,13 +121,14 @@ Promise.all([
       .attr("y", height + 20);
 
     textElement.append("tspan").text(sourceText.split(linkText)[0]);
+
     textElement
       .append("tspan")
       .append("a")
       .attr("xlink:href", linkURL)
       .append("tspan")
-      .text(linkText)
-      .attr("id", "link");
+      .text(linkText);
+
     textElement.append("tspan").text(sourceText.split(linkText)[1]);
 
     const legendWidth = 250;
@@ -119,10 +144,11 @@ Promise.all([
     const legendScale = d3
       .scaleLinear()
       .domain(colorScale.domain())
-      .range([0, legendWidth]);
+      .range([0, legendWidth])
+      .nice();
 
-    const legendAxis = d3.axisBottom(legendScale);
-      // update
+    const legendAxis = d3.axisBottom(legendScale).ticks(6).tickSize(-legendHeight).tickFormat(d => `${d}%`);
+
     legend
       .selectAll("rect")
       .data(d3.range(legendWidth))
