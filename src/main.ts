@@ -1,24 +1,20 @@
 import "./style.css";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
-import { Margin, UsTopology, EducationData } from "./types";
+import { Margin, UsTopology, Education } from "./types";
 
 const width: number = 960;
 const height: number = 600;
 const margin: Margin = { top: 80, left: 70, right: 70, bottom: 80 };
 
-const getCountyData = (education: EducationData[], id: string) => education.find(
-  (e) => e.fips.toString().padStart(5, "0") === id
-);
+const getCountyData = (education: Education[], id: string) =>
+  education.find((e) => e.fips.toString().padStart(5, "0") === id);
 
 const getId = (d: any) => (d.id ?? "").toString();
 
-Promise.all([
-  d3.json<EducationData[]>(
-    "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json"
-  ),
-]).then((educationData) => {
-  const education = educationData[0]!;
+d3.json<Education[]>(
+  "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json"
+).then((education) => {
 
   const educationValues = education?.map((d) => d.bachelorsOrHigher)!;
 
@@ -58,19 +54,19 @@ Promise.all([
       .attr("d", path)
       .attr("class", "county")
       .attr("data-fips", (d) => {
-        const county = getCountyData(education, getId(d));
+        const county = getCountyData(education!, getId(d));
         return county ? county.fips.toString() : "";
       })
       .attr("data-education", (d) => {
-        const county = getCountyData(education, getId(d));
+        const county = getCountyData(education!, getId(d));
         return county ? county.bachelorsOrHigher.toString() : "";
       })
       .attr("fill", (d) => {
-        const county = getCountyData(education, getId(d));
+        const county = getCountyData(education!, getId(d));
         return county ? colorScale(county.bachelorsOrHigher) : "black";
       })
       .on("mouseover", (event, d) => {
-        const county = getCountyData(education, getId(d));
+        const county = getCountyData(education!, getId(d));
         tooltip
           .style("display", "block")
           .html(
@@ -147,7 +143,11 @@ Promise.all([
       .range([0, legendWidth])
       .nice();
 
-    const legendAxis = d3.axisBottom(legendScale).ticks(6).tickSize(-legendHeight).tickFormat(d => `${d}%`);
+    const legendAxis = d3
+      .axisBottom(legendScale)
+      .ticks(6)
+      .tickSize(-legendHeight)
+      .tickFormat((d) => `${d}%`);
 
     legend
       .selectAll("rect")
