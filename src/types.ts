@@ -14,9 +14,10 @@ export interface UsTopology extends Topology {
   };
 }
 
-export interface EducationData {
+export interface Education {
   fips: number;
   state: string;
   area_name: string;
   bachelorsOrHigher: number;
 }
+
